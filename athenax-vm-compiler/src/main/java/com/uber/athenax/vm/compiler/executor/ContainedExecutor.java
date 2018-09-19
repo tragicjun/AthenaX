@@ -18,6 +18,9 @@
 
 package com.uber.athenax.vm.compiler.executor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContainedExecutor {
+  private static final Logger LOG = LoggerFactory.getLogger(ContainedExecutor.class);
 
   public CompilationResult run(JobDescriptor job) throws IOException {
     // HACK: Start a socket to get the results back
@@ -65,6 +69,7 @@ public class ContainedExecutor {
 
     ops.add("-classpath");
     ops.add(System.getProperty("java.class.path"));
+    LOG.info("junz: " + System.getProperty("java.class.path"));
     String javaLibPath = System.getProperty("java.library.path");
     if (javaLibPath != null) {
       ops.add("-Djava.library.path=" + javaLibPath);

@@ -151,9 +151,11 @@ final public class JobWatcherUtil {
   static JobDefinitionDesiredstate computeActualState(InstanceInfo info) {
     // jerryjzhang: substract resource usage of applicaiton master, otherwise
     //              state comparison will always fail
+    long taskManagerVCores = info.status().getAllocatedVCores() - 1;
+    long taskManagerMemory = info.status().getAllocatedMB() - 1024;
     JobDefinitionResource r = new JobDefinitionResource()
-        .memory(info.status().getAllocatedMB() - 1024)
-        .vCores(info.status().getAllocatedVCores() - 1)
+        .memory(taskManagerMemory / taskManagerVCores)
+        .vCores(taskManagerVCores)
         .queue(info.queue())
         .executionSlots(1L); // hard-coded for now
 
