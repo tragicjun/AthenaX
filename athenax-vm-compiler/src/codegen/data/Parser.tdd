@@ -20,6 +20,7 @@
   imports: [
     "com.uber.athenax.vm.compiler.parser.*",
     "java.util.*",
+    "com.google.common.collect.*"
   ],
 
   # List of keywords.
@@ -58,6 +59,11 @@
   # List of methods for parsing extensions to "DROP" calls.
   # Each must accept arguments "(SqlParserPos pos)".
   dropStatementParserMethods: [
+  ]
+
+  # List of methods for parsing extensions to "CREATE [OR REPLACE]" calls.
+  # Each must accept arguments "(SqlParserPos pos, boolean replace)".
+  joinTypes: [
   ]
 
   # List of files in @includes directory that have parser method

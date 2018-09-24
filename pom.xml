@@ -24,12 +24,28 @@
   <name>AthenaX</name>
   <url>http://maven.apache.org</url>
 
+  <repositories>
+    <repository>
+      <id>apache.snapshots</id>
+      <name>Apache Development Snapshot Repository</name>
+      <url>https://repository.apache.org/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <!-- Avoid daily slow update  -->
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- The version of calcite should be consistent with the one used by Flink -->
-    <calcite.version>1.16.0</calcite.version>
-    <flink.version>1.6.0</flink.version>
-    <flink.shaded.version>1.5.0</flink.shaded.version>
+    <calcite.version>1.17.0</calcite.version>
+    <flink.version>1.7-SNAPSHOT</flink.version>
+    <flink.shaded.version>1.7-SNAPSHOT</flink.shaded.version>
     <hadoop.version>2.7.4</hadoop.version>
     <jackson.version>1.9.13</jackson.version>
     <jackson2.version>2.7.4</jackson2.version>

@@ -113,8 +113,8 @@ public class JobCompiler {
 
     AthenaXTableCatalog outputCatalog = catalogProvider.getOutputCatalog("", job.outputs());
     for (String t : job.outputs()) {
-      ExternalCatalogTable tb = outputCatalog.getTable(t);
-      env.registerTableSink(t,TableFactoryUtil.findAndCreateTableSink(env, tb));
+      //ExternalCatalogTable tb = outputCatalog.getTable(t);
+      //env.registerTableSink(t,TableFactoryUtil.findAndCreateTableSink(env, tb));
       table.insertInto(t);
     }
     StreamGraph streamGraph = exeEnv.getStreamGraph();
