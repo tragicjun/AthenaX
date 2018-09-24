@@ -111,7 +111,7 @@ public class JobCompiler {
         .registerInputCatalogs();
     Table table = env.sqlQuery(job.sql());
 
-    AthenaXTableCatalog outputCatalog = catalogProvider.getOutputCatalog("", job.outputs());
+    //AthenaXTableCatalog outputCatalog = catalogProvider.getOutputCatalog("", job.outputs());
     for (String t : job.outputs()) {
       //ExternalCatalogTable tb = outputCatalog.getTable(t);
       //env.registerTableSink(t,TableFactoryUtil.findAndCreateTableSink(env, tb));
