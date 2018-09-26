@@ -109,14 +109,14 @@ public class JobCompiler {
     this
         .registerUdfs()
         .registerInputCatalogs();
-    Table table = env.sqlQuery(job.sql());
+    env.sqlUpdate(job.sql());
 
-    //AthenaXTableCatalog outputCatalog = catalogProvider.getOutputCatalog("", job.outputs());
-    for (String t : job.outputs()) {
-      //ExternalCatalogTable tb = outputCatalog.getTable(t);
-      //env.registerTableSink(t,TableFactoryUtil.findAndCreateTableSink(env, tb));
-      table.insertInto(t);
-    }
+//    //AthenaXTableCatalog outputCatalog = catalogProvider.getOutputCatalog("", job.outputs());
+//    for (String t : job.outputs()) {
+//      //ExternalCatalogTable tb = outputCatalog.getTable(t);
+//      //env.registerTableSink(t,TableFactoryUtil.findAndCreateTableSink(env, tb));
+//      table.insertInto(t);
+//    }
     StreamGraph streamGraph = exeEnv.getStreamGraph();
     return streamGraph.getJobGraph();
   }

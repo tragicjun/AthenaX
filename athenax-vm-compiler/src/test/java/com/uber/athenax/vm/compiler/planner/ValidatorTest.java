@@ -41,7 +41,7 @@ public class ValidatorTest {
     );
     SqlNodeList nodes = Planner.parse(sql);
     Validator validator = new Validator();
-    validator.validateExactlyOnceSelect(nodes);
+    validator.validateExactlyOnceInsert(nodes);
   }
 
   @Test
@@ -52,7 +52,7 @@ public class ValidatorTest {
     );
     SqlNodeList nodes = Planner.parse(sql);
     Validator validator = new Validator();
-    validator.validateExactlyOnceSelect(nodes);
+    validator.validateExactlyOnceInsert(nodes);
   }
 
   @Test

@@ -19,12 +19,7 @@
 package com.uber.athenax.vm.compiler.planner;
 
 import com.uber.athenax.vm.compiler.parser.SqlCreateFunction;
-import org.apache.calcite.sql.SqlIdentifier;
-import org.apache.calcite.sql.SqlLiteral;
-import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlNodeList;
-import org.apache.calcite.sql.SqlSelect;
-import org.apache.calcite.sql.SqlSetOption;
+import org.apache.calcite.sql.*;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.flink.annotation.VisibleForTesting;
@@ -44,7 +39,7 @@ class Validator {
   private final ArrayList<URI> additionalResources = new ArrayList<>();
   private final HashMap<String, String> userDefinedFunctions = new HashMap<>();
 
-  private SqlSelect statement;
+  private SqlInsert statement;
 
   Configuration options() {
     return conf;
@@ -60,7 +55,7 @@ class Validator {
 
   void validateQuery(SqlNodeList query) {
     extract(query);
-    validateExactlyOnceSelect(query);
+    validateExactlyOnceInsert(query);
   }
 
   /**
@@ -107,18 +102,18 @@ class Validator {
    * and it is the last construct.
    */
   @VisibleForTesting
-  void validateExactlyOnceSelect(SqlNodeList query) {
+  void validateExactlyOnceInsert(SqlNodeList query) {
     Preconditions.checkArgument(query.size() > 0);
     SqlNode last = query.get(query.size() - 1);
     long n = StreamSupport.stream(query.spliterator(), false)
-        .filter(x -> x instanceof SqlSelect)
-        .count();
-    Preconditions.checkArgument(n == 1 && last instanceof SqlSelect,
-        "Only one top-level SELECT statement is allowed");
-    statement = (SqlSelect) last;
+            .filter(x -> x instanceof SqlInsert)
+            .count();
+    Preconditions.checkArgument(n == 1 && last instanceof SqlInsert,
+            "Only one top-level SELECT statement is allowed");
+    statement = (SqlInsert) last;
   }
 
-  SqlSelect statement() {
+  SqlInsert statement() {
     return statement;
   }
 
