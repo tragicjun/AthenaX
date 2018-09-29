@@ -42,14 +42,29 @@ public class Planner {
   }
 
   public JobCompilationResult sql(String sql, int parallelism) throws Throwable {
-    SqlNodeList stmts = parse(sql);
-    Validator validator = new Validator();
-    validator.validateQuery(stmts);
+    // TODO: udfCreateSQL get from somewhere
+    String udfCreateSQL =
+            "CREATE FUNCTION myUDF AS 'com.oppo.dc.ostream.udf.MyUDF' USING JAR 'hdfs://bj1230:8020/ostream/ostream-table-1.0-SNAPSHOT.jar';" +
+            "CREATE FUNCTION myUDF1 AS 'com.oppo.dc.ostream.udf.MyUDF1' USING JAR 'hdfs://bj1230:8020/ostream/ostream-table-1.0-SNAPSHOT.jar';";
+
+    SqlNodeList stmtsUDF = parse(udfCreateSQL);
+    Validator validatorUDF = new Validator();
+    validatorUDF.validateUDF(stmtsUDF);
+
+    StringBuilder sbSQL = new StringBuilder();
+    for(String splitSql: sql.split(";")) {
+      SqlNodeList stmts = parse(splitSql);
+      Validator validator = new Validator();
+      validator.validateInsert(stmts);
+      sbSQL.append(validator.statement().toString() + ";");
+    }
+
     JobDescriptor job = new JobDescriptor(
-        validator.userDefinedFunctions(),
+        validatorUDF.userDefinedFunctions(),
         outputs,
         parallelism,
-        validator.statement().toString());
+        sbSQL.toString());
+
     // uses contained executor instead of direct compile for: JobCompiler.compileJob(job);
     CompilationResult res = new ContainedExecutor().run(job);
 
@@ -57,7 +72,7 @@ public class Planner {
       throw res.remoteThrowable();
     }
     return new JobCompilationResult(res.jobGraph(),
-        validator.userDefinedFunctions().values().stream().map(Path::new).collect(Collectors.toList()));
+        validatorUDF.additionalResourcesUnique().stream().map(Path::new).collect(Collectors.toList()));
   }
 
   @VisibleForTesting

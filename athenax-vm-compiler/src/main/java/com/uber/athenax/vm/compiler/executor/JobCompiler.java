@@ -109,7 +109,9 @@ public class JobCompiler {
     this
         .registerUdfs()
         .registerInputCatalogs();
-    env.sqlUpdate(job.sql());
+    for(String sql: job.sql().split(";")) {
+      env.sqlUpdate(sql);
+    }
 
 //    //AthenaXTableCatalog outputCatalog = catalogProvider.getOutputCatalog("", job.outputs());
 //    for (String t : job.outputs()) {
@@ -140,7 +142,7 @@ public class JobCompiler {
         throw new IllegalArgumentException("Invalid UDF " + name, ex);
       }
 
-      if (udf instanceof AthenaXScalarFunction) {
+      if (udf instanceof ScalarFunction) {
         env.registerFunction(name, (ScalarFunction) udf);
       } else if (udf instanceof AthenaXTableFunction) {
         env.registerFunction(name, (TableFunction<?>) udf);

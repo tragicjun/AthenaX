@@ -28,6 +28,7 @@ import org.apache.flink.util.Preconditions;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -49,12 +50,28 @@ class Validator {
     return additionalResources;
   }
 
+  ArrayList<URI> additionalResourcesUnique() {
+    ArrayList<URI> additionalResourcesUnique = new ArrayList<>();
+    LinkedHashSet<URI> set = new LinkedHashSet<URI>(additionalResources.size());
+    set.addAll(additionalResources);
+    additionalResourcesUnique.addAll(set);
+    return additionalResourcesUnique;
+  }
+
   Map<String, String> userDefinedFunctions() {
     return userDefinedFunctions;
   }
 
   void validateQuery(SqlNodeList query) {
     extract(query);
+    validateExactlyOnceInsert(query);
+  }
+
+  void validateUDF(SqlNodeList query) {
+    extract(query);
+  }
+
+  void validateInsert(SqlNodeList query) {
     validateExactlyOnceInsert(query);
   }
 
