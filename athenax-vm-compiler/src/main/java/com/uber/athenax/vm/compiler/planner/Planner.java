@@ -45,13 +45,12 @@ public class Planner {
 
   public JobCompilationResult sql(String sql, int parallelism) throws Throwable {
     // TODO: udfCreateSQL get from somewhere
-//    String udfCreateSQL =
-//            "CREATE FUNCTION myUDF AS 'com.oppo.dc.ostream.udf.MyUDF' USING JAR 'hdfs://bj1230:8020/ostream/ostream-table-1.0-SNAPSHOT.jar';" +
-//            "CREATE FUNCTION myUDF1 AS 'com.oppo.dc.ostream.udf.MyUDF1' USING JAR 'hdfs://bj1230:8020/ostream/ostream-table-1.0-SNAPSHOT.jar';";
-//
-//    SqlNodeList stmtsUDF = parse(udfCreateSQL);
-//    Validator validatorUDF = new Validator();
-//    validatorUDF.validateUDF(stmtsUDF);
+    String udfCreateSQL =
+            "CREATE FUNCTION toId AS 'com.oppo.dc.ostream.udf.AppPacakgeToId' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';";
+
+    SqlNodeList stmtsUDF = parse(udfCreateSQL);
+    Validator validatorUDF = new Validator();
+    validatorUDF.validateUDF(stmtsUDF);
 
     StringBuilder sbSQL = new StringBuilder();
     for(String splitSql: sql.split(";")) {
@@ -62,7 +61,7 @@ public class Planner {
     }
 
     JobDescriptor job = new JobDescriptor(
-        new HashMap<>(),
+        validatorUDF.userDefinedFunctions(),
         outputs,
         parallelism,
         sbSQL.toString());
@@ -74,7 +73,7 @@ public class Planner {
       throw res.remoteThrowable();
     }
     return new JobCompilationResult(res.jobGraph(),
-        new ArrayList<>());
+            validatorUDF.additionalResourcesUnique().stream().map(Path::new).collect(Collectors.toList()));
   }
 
   @VisibleForTesting
