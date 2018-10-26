@@ -41,10 +41,7 @@ import org.apache.flink.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -80,7 +77,7 @@ public class JobCompiler {
   public static CompilationResult compileJob(JobDescriptor job) {
     StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
     StreamTableEnvironment env = StreamTableEnvironment.getTableEnvironment(execEnv);
-    execEnv.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+    execEnv.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
     CompilationResult res = new CompilationResult();
 
     try {
@@ -144,7 +141,7 @@ public class JobCompiler {
 
       if (udf instanceof ScalarFunction) {
         env.registerFunction(name, (ScalarFunction) udf);
-      } else if (udf instanceof AthenaXTableFunction) {
+      } else if (udf instanceof TableFunction) {
         env.registerFunction(name, (TableFunction<?>) udf);
       } else if (udf instanceof AthenaXAggregateFunction) {
         env.registerFunction(name, (AggregateFunction<?, ?>) udf);
