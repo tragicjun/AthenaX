@@ -46,7 +46,16 @@ public class Planner {
   public JobCompilationResult sql(String sql, int parallelism) throws Throwable {
     // TODO: udfCreateSQL get from somewhere
     String udfCreateSQL =
-            "CREATE FUNCTION toId AS 'com.oppo.dc.ostream.udf.AppPacakgeToId' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';";
+            // app_install
+            "CREATE FUNCTION toId AS 'com.oppo.dc.ostream.udf.AppPacakgeToId' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            // browse_feeds
+            "CREATE FUNCTION mySplit AS 'com.oppo.dc.ostream.udf.MySplit' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            // push_log_count
+            "CREATE FUNCTION bodySplit AS 'com.oppo.dc.ostream.udf.pushlog.BodySplitFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            "CREATE FUNCTION arriveCount AS 'com.oppo.dc.ostream.udf.pushlog.GetArriveCountFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            "CREATE FUNCTION showCount AS 'com.oppo.dc.ostream.udf.pushlog.GetShowCountFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            "CREATE FUNCTION clickCount AS 'com.oppo.dc.ostream.udf.pushlog.GetClickCountFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            "CREATE FUNCTION ts AS 'com.oppo.dc.ostream.udf.pushlog.TimeStampFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';";
 
     SqlNodeList stmtsUDF = parse(udfCreateSQL);
     Validator validatorUDF = new Validator();
