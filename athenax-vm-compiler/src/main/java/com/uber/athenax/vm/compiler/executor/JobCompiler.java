@@ -24,8 +24,11 @@ import com.uber.athenax.vm.api.functions.AthenaXScalarFunction;
 import com.uber.athenax.vm.api.functions.AthenaXTableFunction;
 import com.uber.athenax.vm.api.tables.AthenaXTableCatalog;
 import com.uber.athenax.vm.api.tables.AthenaXTableSinkProvider;
+import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.runtime.jobgraph.JobGraph;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
+import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.graph.StreamGraph;
 import org.apache.flink.table.api.Table;
@@ -46,6 +49,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class JobCompiler {
   private static final Logger LOG = LoggerFactory.getLogger(JobCompiler.class);
@@ -77,6 +81,27 @@ public class JobCompiler {
   public static CompilationResult compileJob(JobDescriptor job) {
     StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
     StreamTableEnvironment env = StreamTableEnvironment.getTableEnvironment(execEnv);
+
+    // start a checkpoint every 1000 ms
+    execEnv.enableCheckpointing(10 * 60 * 1000);
+    // advanced options:
+    // set mode to exactly-once (this is the default)
+    execEnv.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+    // make sure 500 ms of progress happen between checkpoints
+    execEnv.getCheckpointConfig().setMinPauseBetweenCheckpoints(60 * 1000);
+    // checkpoints have to complete within one minute, or are discarded
+    execEnv.getCheckpointConfig().setCheckpointTimeout(5 * 60 * 1000);
+    // allow only one checkpoint to be in progress at the same time
+    execEnv.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
+    // enable externalized checkpoints which are retained after job cancellation
+    execEnv.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+
+    // enable restarts
+    execEnv.setRestartStrategy(RestartStrategies.fixedDelayRestart(
+            Integer.MAX_VALUE, // number of restart attempts
+            org.apache.flink.api.common.time.Time.of(10, TimeUnit.SECONDS) // delay
+    ));
+      
     execEnv.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
     CompilationResult res = new CompilationResult();
 
