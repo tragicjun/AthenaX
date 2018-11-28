@@ -45,17 +45,28 @@ public class Planner {
 
   public JobCompilationResult sql(String sql, int parallelism) throws Throwable {
     // TODO: udfCreateSQL get from somewhere
+//    String udfJarPath = "hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar";
+    String udfJarPath = "hdfs://bj1230:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar";
     String udfCreateSQL =
+            // common
+            "CREATE FUNCTION tsToFormatDate AS 'com.oppo.dc.ostream.udf.common.TimeStampToFormatDate' USING JAR '" + udfJarPath + "';" +
+            "CREATE FUNCTION mapToJSONString AS 'com.oppo.dc.ostream.udf.common.MapToJSONString' USING JAR '" + udfJarPath + "';" +
             // app_install
-            "CREATE FUNCTION toId AS 'com.oppo.dc.ostream.udf.AppPacakgeToId' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            "CREATE FUNCTION toId AS 'com.oppo.dc.ostream.udf.AppPacakgeToId' USING JAR '" + udfJarPath + "';" +
             // browse_feeds
-            "CREATE FUNCTION mySplit AS 'com.oppo.dc.ostream.udf.MySplit' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
+            "CREATE FUNCTION mySplit AS 'com.oppo.dc.ostream.udf.feeds.MySplit' USING JAR '" + udfJarPath + "';" +
+            "CREATE FUNCTION toTimeStamp AS 'com.oppo.dc.ostream.udf.feeds.DateToTimeStamp' USING JAR '" + udfJarPath + "';" +
             // push_log_count
-            "CREATE FUNCTION bodySplit AS 'com.oppo.dc.ostream.udf.pushlog.BodySplitFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
-            "CREATE FUNCTION arriveCount AS 'com.oppo.dc.ostream.udf.pushlog.GetArriveCountFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
-            "CREATE FUNCTION showCount AS 'com.oppo.dc.ostream.udf.pushlog.GetShowCountFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
-            "CREATE FUNCTION clickCount AS 'com.oppo.dc.ostream.udf.pushlog.GetClickCountFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';" +
-            "CREATE FUNCTION ts AS 'com.oppo.dc.ostream.udf.pushlog.TimeStampFun' USING JAR 'hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar';";
+            "CREATE FUNCTION bodySplit AS 'com.oppo.dc.ostream.udf.pushlog.BodySplitFun' USING JAR '" + udfJarPath + "';" +
+            "CREATE FUNCTION arriveCount AS 'com.oppo.dc.ostream.udf.pushlog.GetArriveCountFun' USING JAR '" + udfJarPath + "';" +
+            "CREATE FUNCTION showCount AS 'com.oppo.dc.ostream.udf.pushlog.GetShowCountFun' USING JAR '" + udfJarPath + "';" +
+            "CREATE FUNCTION clickCount AS 'com.oppo.dc.ostream.udf.pushlog.GetClickCountFun' USING JAR '" + udfJarPath + "';" +
+            "CREATE FUNCTION ts AS 'com.oppo.dc.ostream.udf.pushlog.TimeStampFun' USING JAR '" + udfJarPath + "';" +
+            // position_tag
+            "CREATE FUNCTION toMapHome AS 'com.oppo.dc.ostream.udf.positiontag.HomeMap' USING JAR '" + udfJarPath + "';" +
+            "CREATE FUNCTION toMapCompany AS 'com.oppo.dc.ostream.udf.positiontag.CompanyMap' USING JAR '" + udfJarPath + "';" +
+            // browser_app_excaption
+            "CREATE FUNCTION appExceptionBodySplit AS 'com.oppo.dc.ostream.udf.appexception.BodySplitFun' USING JAR '" + udfJarPath + "';";
 
     SqlNodeList stmtsUDF = parse(udfCreateSQL);
     Validator validatorUDF = new Validator();

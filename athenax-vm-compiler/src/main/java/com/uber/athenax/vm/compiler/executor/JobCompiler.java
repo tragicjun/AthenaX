@@ -101,7 +101,7 @@ public class JobCompiler {
             Integer.MAX_VALUE, // number of restart attempts
             org.apache.flink.api.common.time.Time.of(10, TimeUnit.SECONDS) // delay
     ));
-      
+
     execEnv.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
     CompilationResult res = new CompilationResult();
 
