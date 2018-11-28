@@ -63,11 +63,11 @@ public class JobManager implements InstanceStateUpdateListener {
     return jobStore.get(jobUUID);
   }
 
-  public JobCompilationResult compile(JobDefinition job, JobDefinitionDesiredstate spec) throws Throwable {
+  public JobCompilationResult compile(ExtendedJobDefinition job, JobDefinitionDesiredstate spec) throws Throwable {
     //Map<String, AthenaXTableCatalog> inputs = catalogProvider.getInputCatalog(spec.getClusterId());
     //AthenaXTableCatalog output = catalogProvider.getOutputCatalog(spec.getClusterId(), job.getOutputs());
-    Planner planner = new Planner(job.getOutputs());
-    return planner.sql(job.getQuery(), Math.toIntExact(spec.getResource().getVCores()));
+    Planner planner = new Planner(job.getDefinition().getOutputs());
+    return planner.sql(job.getUuid(), job.getDefinition().getQuery(), Math.toIntExact(spec.getResource().getVCores()));
   }
 
   @Override

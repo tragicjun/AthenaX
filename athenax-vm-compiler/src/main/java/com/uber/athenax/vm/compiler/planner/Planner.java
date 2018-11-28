@@ -32,6 +32,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Planner {
@@ -43,7 +44,7 @@ public class Planner {
     this.outputs = outputs;
   }
 
-  public JobCompilationResult sql(String sql, int parallelism) throws Throwable {
+  public JobCompilationResult sql(UUID jobID, String sql, int parallelism) throws Throwable {
     // TODO: udfCreateSQL get from somewhere
 //    String udfJarPath = "hdfs://bj1181:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar";
     String udfJarPath = "hdfs://bj1230:8020/ostream/udf/ostream-table-1.0-SNAPSHOT.jar";
@@ -81,6 +82,7 @@ public class Planner {
     }
 
     JobDescriptor job = new JobDescriptor(
+        jobID,
         validatorUDF.userDefinedFunctions(),
         outputs,
         parallelism,

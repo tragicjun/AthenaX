@@ -24,11 +24,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class JobDescriptor implements Serializable {
   private static final long serialVersionUID = -1;
   private final Map<String, String> userDefineFunctions;
   private final int parallelism;
+  private final UUID id;
 
   /**
    * Stripped down statement that can be recognized by Flink.
@@ -36,13 +38,18 @@ public class JobDescriptor implements Serializable {
   private final String sqlStatement;
   private final List<String> outputs;
 
-  public JobDescriptor(Map<String, String> userDefineFunctions,
+  public JobDescriptor(UUID id, Map<String, String> userDefineFunctions,
                        List<String> outputs,
                        int parallelism, String sqlStatement) {
+    this.id = id;
     this.userDefineFunctions = userDefineFunctions;
     this.parallelism = parallelism;
     this.sqlStatement = sqlStatement;
     this.outputs = outputs;
+  }
+
+  UUID id(){
+    return id;
   }
 
   Map<String, String> udf() {

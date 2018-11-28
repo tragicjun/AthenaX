@@ -142,6 +142,7 @@ public class JobCompiler {
 //      table.insertInto(t);
 //    }
     StreamGraph streamGraph = exeEnv.getStreamGraph();
+    streamGraph.setJobName(job.id().toString());
     return streamGraph.getJobGraph();
   }
 
