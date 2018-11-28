@@ -82,19 +82,19 @@ public class JobCompiler {
     StreamExecutionEnvironment execEnv = StreamExecutionEnvironment.createLocalEnvironment();
     StreamTableEnvironment env = StreamTableEnvironment.getTableEnvironment(execEnv);
 
-    // start a checkpoint every 1000 ms
-    execEnv.enableCheckpointing(10 * 60 * 1000);
-    // advanced options:
-    // set mode to exactly-once (this is the default)
-    execEnv.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-    // make sure 500 ms of progress happen between checkpoints
-    execEnv.getCheckpointConfig().setMinPauseBetweenCheckpoints(60 * 1000);
-    // checkpoints have to complete within one minute, or are discarded
-    execEnv.getCheckpointConfig().setCheckpointTimeout(5 * 60 * 1000);
-    // allow only one checkpoint to be in progress at the same time
-    execEnv.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
-    // enable externalized checkpoints which are retained after job cancellation
-    execEnv.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+//    // start a checkpoint every 1000 ms
+//    execEnv.enableCheckpointing(10 * 60 * 1000);
+//    // advanced options:
+//    // set mode to exactly-once (this is the default)
+//    execEnv.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+//    // make sure 500 ms of progress happen between checkpoints
+//    execEnv.getCheckpointConfig().setMinPauseBetweenCheckpoints(60 * 1000);
+//    // checkpoints have to complete within one minute, or are discarded
+//    execEnv.getCheckpointConfig().setCheckpointTimeout(5 * 60 * 1000);
+//    // allow only one checkpoint to be in progress at the same time
+//    execEnv.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
+//    // enable externalized checkpoints which are retained after job cancellation
+//    execEnv.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
 
     // enable restarts
     execEnv.setRestartStrategy(RestartStrategies.fixedDelayRestart(
