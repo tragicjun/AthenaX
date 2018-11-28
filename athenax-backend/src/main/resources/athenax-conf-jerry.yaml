@@ -27,8 +27,7 @@ clusters:
     yarn.site.location: /Users/jerryjzhang/work/bigdata/hadoop-2.7.2/etc/hadoop/yarn-site.xml
     athenax.home.dir: hdfs://localhost:9020/athenax/dir
     flink.uber.jar.location: hdfs://localhost:9020/athenax/jar/flink-uber.jar
-#    additional.jars:
-#          - hdfs://localhost:9020/athenax/jar/flink-table.jar
-    localize.resources:
+    additional.jars:
           - hdfs://localhost:9020/athenax/conf/log4j.properties
+    localize.resources:
           - hdfs://localhost:9020/athenax/conf/flink-conf.yaml
