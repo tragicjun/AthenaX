@@ -185,6 +185,7 @@ public class InstanceManager implements AutoCloseable {
   public Map.Entry<UUID, ApplicationId> instantiate(
       JobDefinitionDesiredstate state,
       UUID jobUUID,
+      String jobName,
       JobCompilationResult job) throws Exception {
     String clusterName = state.getClusterId();
     ClusterInfo cluster = clusters.get(clusterName);
@@ -199,7 +200,7 @@ public class InstanceManager implements AutoCloseable {
 
     JobConf jobConf = new JobConf(
         appId,
-        jobUUID.toString(),
+        jobName,
         job.additionalJars(),
         state.getResource(),
         md);

@@ -79,7 +79,7 @@ public class InstanceManagerITest {
             mock(ScheduledExecutorService.class),
             AthenaXExtraConfigOptions.INSTANCE_MANAGER_RESCAN_INTERVAL.defaultValue())) {
 
-          Map.Entry<UUID, ApplicationId> id = manager.instantiate(state, jobUUID, res);
+          Map.Entry<UUID, ApplicationId> id = manager.instantiate(state, jobUUID, "test", res);
           YarnApplicationState yarnState = MiniAthenaXCluster.pollFinishedApplicationState(client, id.getValue());
           assertEquals(FINISHED, yarnState);
 

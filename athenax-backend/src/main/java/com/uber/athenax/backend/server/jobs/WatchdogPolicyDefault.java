@@ -57,7 +57,7 @@ public class WatchdogPolicyDefault implements WatchdogPolicy {
         JobDefinition job = e.getKey().getDefinition();
         try {
           res = jobManager.compile(e.getKey(), s);
-          instanceManager.instantiate(s, e.getKey().getUuid(), res);
+          instanceManager.instantiate(s, e.getKey().getUuid(), e.getKey().getDefinition().getName(), res);
         } catch (Throwable ex) {
           LOG.warn("Failed to instantiate the query '{}' on {}", job.getQuery(), s.getClusterId(), ex);
         }
