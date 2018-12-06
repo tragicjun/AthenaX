@@ -33,6 +33,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 /**
  * External Catalog Table based on mock data and mock schema.
@@ -55,9 +56,12 @@ public class MockExternalCatalogTable implements Serializable {
     TableSchema tableSchema = new TableSchema(schema.getFieldNames(), schema.getFieldTypes());
     ConnectorDescriptor descriptor = new ConnectorDescriptor(CONNECTOR_TYPE, CONNECTOR_VERSION, false) {
       @Override
-      public void addConnectorProperties(DescriptorProperties properties) {
+      public Map<String, String> toConnectorProperties() {
+        final DescriptorProperties properties = new DescriptorProperties();
         properties.putTableSchema(TABLE_SCHEMA_CONNECTOR_PROPERTY, tableSchema);
         properties.putString(TABLE_DATA_CONNECTOR_PROPERTY, serializeRows());
+
+        return properties.asMap();
       }
     };
     return ExternalCatalogTable.builder(descriptor).withSchema(new Schema().schema(tableSchema)).asTableSourceAndSink();

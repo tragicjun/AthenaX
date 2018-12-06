@@ -45,8 +45,8 @@ final class TableSinkProviderRegistry {
 
   static AthenaXTableSinkProvider getProvider(ExternalCatalogTable table) {
     DescriptorProperties properties = new DescriptorProperties(true);
-    table.addProperties(properties);
-    String connectorType = properties.getString(ConnectorDescriptorValidator.CONNECTOR_TYPE());
+    properties.putProperties(table.toProperties());
+    String connectorType = properties.getString(ConnectorDescriptorValidator.CONNECTOR_TYPE);
     return PROVIDERS.get(connectorType);
   }
 }

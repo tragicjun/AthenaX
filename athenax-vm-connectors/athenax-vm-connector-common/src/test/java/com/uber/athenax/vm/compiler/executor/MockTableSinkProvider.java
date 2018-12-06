@@ -38,7 +38,7 @@ public class MockTableSinkProvider implements AthenaXTableSinkProvider {
   @Override
   public AppendStreamTableSink<Row> getAppendStreamTableSink(ExternalCatalogTable table) throws IOException {
     DescriptorProperties params = new DescriptorProperties(true);
-    table.addProperties(params);
+    params.putProperties(table.toProperties());
     TableSchema tableSchema = params.getTableSchema(MockExternalCatalogTable.TABLE_SCHEMA_CONNECTOR_PROPERTY);
     RowTypeInfo type = new RowTypeInfo(tableSchema.getTypes(), tableSchema.getColumnNames());
     return new MockAppendStreamTableSink(type);

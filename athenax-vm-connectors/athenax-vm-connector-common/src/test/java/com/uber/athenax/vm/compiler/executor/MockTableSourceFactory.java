@@ -45,8 +45,8 @@ public class MockTableSourceFactory implements StreamTableSourceFactory<Row> {
   @Override
   public Map<String, String> requiredContext() {
     Map<String, String> context = new HashMap<>();
-    context.put(ConnectorDescriptorValidator.CONNECTOR_TYPE(), CONNECTOR_TYPE);
-    context.put(ConnectorDescriptorValidator.CONNECTOR_PROPERTY_VERSION(), String.valueOf(CONNECTOR_VERSION));
+    context.put(ConnectorDescriptorValidator.CONNECTOR_TYPE, CONNECTOR_TYPE);
+    context.put(ConnectorDescriptorValidator.CONNECTOR_PROPERTY_VERSION, String.valueOf(CONNECTOR_VERSION));
     return context;
   }
 
