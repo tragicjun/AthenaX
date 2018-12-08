@@ -34,7 +34,7 @@ public final class AthenaXExtraConfigOptions {
    * The interval that the instance manager will rescan all running AthenaX application.
    */
   public static final ConfigOption<Long> INSTANCE_MANAGER_RESCAN_INTERVAL =
-      key("instancemanager.rescan.interval").defaultValue(120 * 1000L);
+      key("instancemanager.rescan.interval").defaultValue(60 * 1000L);
 
   private AthenaXExtraConfigOptions() {
   }

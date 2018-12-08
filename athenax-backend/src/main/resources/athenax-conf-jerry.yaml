@@ -22,6 +22,7 @@ jobstore.impl: com.oppo.dc.ostream.job.OStreamJobStore
 extras:
  foo: bar
  jobstore.leveldb.file: /tmp/athenax
+ instancemanager.rescan.interval: 60000
 clusters:
   foo:
     yarn.site.location: /Users/jerryjzhang/work/bigdata/hadoop-2.7.2/etc/hadoop/yarn-site.xml
